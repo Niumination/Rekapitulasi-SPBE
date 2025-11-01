@@ -158,14 +158,15 @@ function LoginPage({ onLogin }) {
         description: "Selamat datang di Sistem SPBE Aceh Tengah."
       })
       
-      onLogin()
+      // Wait a bit for auth state to propagate
+      // The onAuthStateChange listener will handle the redirect
+      // Don't set loading to false - let the auth state change handle it
     } catch (error) {
       toast({
         title: "Login Gagal",
         description: error.message,
         variant: "destructive"
       })
-    } finally {
       setLoading(false)
     }
   }
