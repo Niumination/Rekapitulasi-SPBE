@@ -75,11 +75,15 @@ yarn install
 
 2. **Environment Setup**
 
-File `.env` sudah dikonfigurasi dengan Supabase credentials:
+File `.env.local` sudah dikonfigurasi dengan Supabase credentials:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://dofvacvkzgzeixalkcbb.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 ```
+
+⚠️ **Update Terbaru (Login Fix)**:
+- Fixed login redirect issue - aplikasi sekarang akan redirect ke dashboard dengan benar setelah login
+- Perbaikan di `handleLogin` function untuk menunggu auth state change dengan benar
 
 3. **Setup Database & Storage**
 
