@@ -306,7 +306,7 @@ SELECT
     d.id,
     aspek.kode,
     aspek.nama,
-    aspek.desc,
+    aspek.deskripsi,
     aspek.urutan
 FROM domain_spbe d
 CROSS JOIN (VALUES
@@ -322,7 +322,7 @@ CROSS JOIN (VALUES
     -- Domain Layanan SPBE
     ('A7', 'Layanan Administrasi Pemerintahan Berbasis Elektronik', 'Layanan internal pemerintahan', 7),
     ('A8', 'Layanan Publik Berbasis Elektronik', 'Layanan untuk masyarakat', 8)
-) AS aspek(kode, nama, desc, urutan)
+) AS aspek(kode, nama, deskripsi, urutan)
 WHERE 
     (d.kode_domain = 'D1' AND aspek.kode IN ('A1', 'A2'))
     OR (d.kode_domain = 'D2' AND aspek.kode IN ('A3', 'A4', 'A5'))
