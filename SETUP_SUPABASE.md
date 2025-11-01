@@ -71,77 +71,78 @@ SELECT * FROM indikator_spbe;
 2. Klik tab **Policies**
 3. Klik **New Policy**
 
-**Policy 1: Allow Authenticated Uploads**
-```sql
--- Policy Name: Allow authenticated uploads
--- Allowed operation: INSERT
+### Cara 1: Via Supabase Dashboard (RECOMMENDED - Paling Mudah)
 
-CREATE POLICY "Allow authenticated uploads"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK (
-  bucket_id = 'bukti_dukung_spbe' AND
-  auth.uid() IS NOT NULL
+1. Klik bucket `bukti_dukung_spbe` yang baru dibuat
+2. Klik tab **Policies**
+3. Klik **New Policy** → pilih **Custom policy**
+
+**Policy 1: Allow Authenticated Uploads (INSERT)**
+- Policy name: `Allow authenticated uploads`
+- Policy definition for INSERT:
+```sql
+bucket_id = 'bukti_dukung_spbe' AND auth.uid() IS NOT NULL
+```
+- Target roles: `authenticated`
+- Klik **Review** → **Save policy**
+
+**Policy 2: Allow SELECT (READ)**
+- Klik **New Policy** lagi → **Custom policy**
+- Policy name: `Allow authenticated reads`
+- Policy definition for SELECT:
+```sql
+bucket_id = 'bukti_dukung_spbe'
+```
+- Target roles: `authenticated`
+- Klik **Review** → **Save policy**
+
+**Policy 3: Allow DELETE**
+- Klik **New Policy** lagi → **Custom policy**
+- Policy name: `Allow delete`
+- Policy definition for DELETE:
+```sql
+bucket_id = 'bukti_dukung_spbe'
+```
+- Target roles: `authenticated`
+- Klik **Review** → **Save policy**
+
+### Cara 2: Via SQL Editor (Advanced)
+
+Jika ingin menggunakan SQL Editor, **buat file query TERPISAH** setelah bucket sudah dibuat:
+
+```sql
+-- JALANKAN INI SETELAH BUCKET SUDAH DIBUAT
+-- Di SQL Editor terpisah dari schema utama
+
+-- Policy 1: Allow Uploads
+INSERT INTO storage.policies (name, bucket_id, definition, check)
+VALUES (
+  'Allow authenticated uploads',
+  'bukti_dukung_spbe',
+  'INSERT',
+  'bucket_id = ''bukti_dukung_spbe'' AND auth.uid() IS NOT NULL'
+);
+
+-- Policy 2: Allow Reads
+INSERT INTO storage.policies (name, bucket_id, definition, check)
+VALUES (
+  'Allow authenticated reads',
+  'bukti_dukung_spbe',
+  'SELECT',
+  'bucket_id = ''bukti_dukung_spbe'''
+);
+
+-- Policy 3: Allow Deletes
+INSERT INTO storage.policies (name, bucket_id, definition, check)
+VALUES (
+  'Allow delete',
+  'bukti_dukung_spbe',
+  'DELETE',
+  'bucket_id = ''bukti_dukung_spbe'''
 );
 ```
 
-**Policy 2: Allow Unit Access to Files**
-```sql
--- Policy Name: Allow unit access to files
--- Allowed operation: SELECT
-
-CREATE POLICY "Allow unit access to files"
-ON storage.objects FOR SELECT
-TO authenticated
-USING (
-  bucket_id = 'bukti_dukung_spbe' AND
-  (
-    -- Verifikator and Super Admin can see all
-    EXISTS (
-      SELECT 1 FROM users 
-      WHERE users.id = auth.uid() 
-      AND users.role IN ('verifikator', 'super_admin')
-    )
-    OR
-    -- Operator can see files from their unit (path starts with unit_id)
-    EXISTS (
-      SELECT 1 FROM users 
-      WHERE users.id = auth.uid() 
-      AND users.role = 'operator_unit'
-      AND (storage.foldername(name))[1] = users.unit_kerja_id::text
-    )
-  )
-);
-```
-
-**Policy 3: Allow File Deletion**
-```sql
--- Policy Name: Allow file deletion
--- Allowed operation: DELETE
-
-CREATE POLICY "Allow file deletion"
-ON storage.objects FOR DELETE
-TO authenticated
-USING (
-  bucket_id = 'bukti_dukung_spbe' AND
-  (
-    -- Only operators can delete their unit's files
-    EXISTS (
-      SELECT 1 FROM users 
-      WHERE users.id = auth.uid() 
-      AND users.role = 'operator_unit'
-      AND (storage.foldername(name))[1] = users.unit_kerja_id::text
-    )
-    OR
-    -- Super admin can delete any file
-    EXISTS (
-      SELECT 1 FROM users 
-      WHERE users.id = auth.uid() 
-      AND users.role = 'super_admin'
-    )
-  )
-);
-```
+⚠️ **PENTING**: Storage policies menggunakan sintaks yang berbeda dari table policies. Gunakan **Cara 1 (Dashboard)** untuk hasil terbaik!
 
 ---
 
