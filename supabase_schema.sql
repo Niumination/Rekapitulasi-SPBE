@@ -289,7 +289,7 @@ INSERT INTO unit_kerja (nama_unit, kode_unit, deskripsi) VALUES
 ('Dinas Kesehatan', 'DINKES', 'Kesehatan Masyarakat'),
 ('Dinas Pekerjaan Umum dan Penataan Ruang', 'DPUPR', 'Infrastruktur dan Penataan Ruang'),
 ('Badan Keuangan Daerah', 'BKD', 'Pengelolaan Keuangan Daerah'),
-('Badan Kepegawaian Daerah', 'BKD', 'Kepegawaian dan Pengembangan SDM'),
+('Badan Kepegawaian Daerah', 'BKPSDM', 'Kepegawaian dan Pengembangan SDM'),
 ('Dinas Sosial', 'DINSOS', 'Kesejahteraan Sosial'),
 ('Dinas Kependudukan dan Pencatatan Sipil', 'DISDUKCAPIL', 'Administrasi Kependudukan');
 
