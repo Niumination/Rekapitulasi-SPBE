@@ -112,33 +112,45 @@ Jika ingin menggunakan SQL Editor, **buat file query TERPISAH** setelah bucket s
 
 ```sql
 -- JALANKAN INI SETELAH BUCKET SUDAH DIBUAT
--- Di SQL Editor terpisah dari schema utama
+-- Di SQL Editor Supabase
 
--- Policy 1: Allow Uploads
-INSERT INTO storage.policies (name, bucket_id, definition, check)
-VALUES (
-  'Allow authenticated uploads',
-  'bukti_dukung_spbe',
-  'INSERT',
-  'bucket_id = ''bukti_dukung_spbe'' AND auth.uid() IS NOT NULL'
+-- Policy 1: Allow Authenticated Uploads
+CREATE POLICY "Allow authenticated uploads"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+  bucket_id = 'bukti_dukung_spbe'
 );
 
--- Policy 2: Allow Reads
-INSERT INTO storage.policies (name, bucket_id, definition, check)
-VALUES (
-  'Allow authenticated reads',
-  'bukti_dukung_spbe',
-  'SELECT',
-  'bucket_id = ''bukti_dukung_spbe'''
+-- Policy 2: Allow Authenticated Reads  
+CREATE POLICY "Allow authenticated reads"
+ON storage.objects
+FOR SELECT
+TO authenticated
+USING (
+  bucket_id = 'bukti_dukung_spbe'
 );
 
--- Policy 3: Allow Deletes
-INSERT INTO storage.policies (name, bucket_id, definition, check)
-VALUES (
-  'Allow delete',
-  'bukti_dukung_spbe',
-  'DELETE',
-  'bucket_id = ''bukti_dukung_spbe'''
+-- Policy 3: Allow Authenticated Deletes
+CREATE POLICY "Allow authenticated delete"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (
+  bucket_id = 'bukti_dukung_spbe'
+);
+
+-- Policy 4: Allow Authenticated Updates (opsional)
+CREATE POLICY "Allow authenticated updates"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (
+  bucket_id = 'bukti_dukung_spbe'
+)
+WITH CHECK (
+  bucket_id = 'bukti_dukung_spbe'
 );
 ```
 
