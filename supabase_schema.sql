@@ -335,7 +335,7 @@ SELECT
     a.id,
     i.kode,
     i.nama,
-    i.desc,
+    i.deskripsi,
     uk.id,
     i.bobot,
     i.urutan
@@ -351,7 +351,7 @@ CROSS JOIN (VALUES
     ('IND-8.1', 'Layanan Publik Sektor 1', 'Implementasi layanan publik berbasis elektronik sektor 1', 'DISDIKBUD', 4.00, 5),
     ('IND-8.2', 'Layanan Publik Sektor 2', 'Implementasi layanan publik berbasis elektronik sektor 2', 'DINKES', 4.00, 6),
     ('IND-8.3', 'Layanan Administrasi Kependudukan', 'Layanan administrasi kependudukan berbasis elektronik', 'DISDUKCAPIL', 4.00, 7)
-) AS i(kode, nama, desc, unit_kode, bobot, urutan)
+) AS i(kode, nama, deskripsi, unit_kode, bobot, urutan)
 LEFT JOIN unit_kerja uk ON uk.kode_unit = i.unit_kode
 WHERE 
     (a.kode_aspek = 'A1' AND i.kode IN ('IND-1.1', 'IND-1.2'))
